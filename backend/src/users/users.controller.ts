@@ -6,10 +6,12 @@ import {
   Param,
   Delete,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Users } from './entities/users.entity';
+import { UsersGuard } from './users.guard';
 
 @Controller('users')
 export class UsersController {
@@ -25,9 +27,10 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @UseGuards(UsersGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    return this.usersService.findOnePerson(+id);
   }
 
   // @Patch(':id')
