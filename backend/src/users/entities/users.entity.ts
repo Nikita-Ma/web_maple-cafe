@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity('users')
+@Unique(['telephone'])
 export class Users {
   @PrimaryGeneratedColumn()
   id: number;
@@ -14,14 +15,14 @@ export class Users {
   status: string;
   @Column()
   telephone: string;
-  @Column()
+  @Column({ unique: true })
   email: string;
   @Column({ default: false })
   banned: boolean;
-  @Column()
+  @Column({ nullable: true })
   orders: number;
   @Column({ default: 0 })
   restMoney: number;
-  @Column({ type: 'timestamptz' }) // Recommended
-  date_time_with_timezone: Date;
+  @Column({ nullable: true, type: 'timestamptz' }) // Recommended
+  date: Date;
 }

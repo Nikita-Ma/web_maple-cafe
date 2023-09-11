@@ -18,6 +18,7 @@ import { Products } from './product/entities/product.entity';
       password: '12345',
       database: '12345',
       entities: [Users, Products],
+      autoLoadEntities: true,
       synchronize: true,
     }),
     UsersModule,
