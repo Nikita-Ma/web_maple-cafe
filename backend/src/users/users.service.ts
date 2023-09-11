@@ -18,23 +18,14 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  async findOnePerson(id: number) {
+  async findOnePerson(email: string) {
     return this.userRepository
       .createQueryBuilder('entityUsers')
-      .select(['entityUsers.firstName'])
-      .where({ id: id })
+      .select(['entityUsers.id', 'entityUsers.email', 'entityUsers.password'])
+      .where({ email: email })
       .getRawMany(); // Use getRawMany instead of getMany
   }
 
-
-
-  async checkOnAdmin(id: number) {
-    return this.userRepository
-      .createQueryBuilder('entityUsers')
-      .select(['entityUsers.firstName'])
-      .where({ id: id })
-      .getRawMany(); // Use getRawMany instead of getMany
-  }
   // update(id: number, updateUserDto: UpdateUserDto) {
   //   return `This action updates a #${id} user`;
   // }

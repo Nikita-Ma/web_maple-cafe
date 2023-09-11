@@ -29,8 +29,8 @@ export class UsersController {
 
   @UseGuards(UsersGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOnePerson(+id);
+  findOne(@Param('email') email: string) {
+    return this.usersService.findOnePerson(email);
   }
 
   // @Patch(':id')
