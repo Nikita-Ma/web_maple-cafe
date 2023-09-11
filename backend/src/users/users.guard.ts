@@ -10,20 +10,19 @@ export class UsersGuard implements CanActivate {
     private readonly reflector: Reflector,
     @InjectRepository(Users)
     private readonly userRepository: Repository<Users>,
-  ) {
-  }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
+    // TODO: /**********************
+    //        * Hash password/name/and etc
+    //        * Decoded and find in this place
+    //       ***********************/
     // Check if the user is an admin (you can implement your own logic here)
     const user = await this.userRepository.findOne({
       where: { id: request.params.id },
     });
 
-    if (user.status == 'admin') {
-      return true;
-    } else {
-      return false;
-    }
+    return user.status == 'admin';
   }
 }
