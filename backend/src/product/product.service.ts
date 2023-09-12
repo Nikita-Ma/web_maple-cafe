@@ -15,7 +15,7 @@ export class ProductService {
 
  async create(createProductDto: CreateProductDto) {
     return this.productRepository.save(createProductDto);
-  }
+ }
 
   async findAll() {
     return this.productRepository.find();
@@ -25,11 +25,24 @@ export class ProductService {
     return `This action returns a #${id} product`;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(updateProductDto: UpdateProductDto) {
+    const product = await this.productRepository.findBy({ id: updateProductDto.id });
+
+    // If the product with the given id doesn't exist, you can handle this case accordingly
+    if (!product) {
+      throw new Error(`Product with ID ${updateProductDto.id} not found`);
+    }
+
+    const newProductObject = { ...product, ...updateProductDto };
+
+    // Save the updated product entity to the database
+    await this.productRepository.save(newProductObject);
+
+    return product;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} product`;
+    return this.productRepository.createQueryBuilder('products').where({ id: Number(id) }).delete().execute();
+
   }
 }

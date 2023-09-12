@@ -8,6 +8,8 @@ import { Users } from './auth/entities/users.entity';
 import { Products } from './product/entities/product.entity';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './logger.middleware';
+import { CategoryModule } from './category/category.module';
+import { Category } from './category/entities/category.entity';
 
 @Module({
   imports: [
@@ -18,13 +20,14 @@ import { LoggerMiddleware } from './logger.middleware';
       username: '12345',
       password: '12345',
       database: '12345',
-      entities: [Users, Products],
+      entities: [Users, Products, Category],
       autoLoadEntities: true,
       synchronize: true,
     }),
     OrdersModule,
     ProductModule,
     AuthModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

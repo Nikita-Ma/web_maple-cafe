@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, UpdateDateColumn } from 'typeorm';
+import { Category } from '../../category/entities/category.entity';
 
 @Entity('products')
 export class Products {
@@ -14,6 +15,10 @@ export class Products {
   nowPrice: number;
   @Column()
   oldPrice: number;
+  @ManyToOne(() => Category, (category) => category.products)
+  category: Category;
   @CreateDateColumn()
-  date: Date;
+  createdDate: Date;
+  @UpdateDateColumn()
+  updateDate: Date;
 }
