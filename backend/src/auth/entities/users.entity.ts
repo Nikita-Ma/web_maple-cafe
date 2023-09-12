@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn } from 'typeorm';
 
 @Entity('users')
 @Unique(['telephone'])
@@ -23,6 +23,6 @@ export class Users {
   orders: number;
   @Column({ default: 0 })
   restMoney: number;
-  @Column({ nullable: true, type: 'timestamptz' }) // Recommended
+  @CreateDateColumn()
   date: Date;
 }

@@ -24,7 +24,7 @@ export class AuthService {
   ) {
   }
 
-  async signIn(email: string, pass: string): Promise<any> {
+  async logIn(email: string, pass: string): Promise<any> {
     console.log(email);
     const user = await this.userRepository
       .createQueryBuilder()
@@ -46,6 +46,8 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, salt);
     return hashedPassword;
   }
+
+
 
   async generateToken(payload: any): Promise<string> {
     return this.jwtService.sign(payload);
