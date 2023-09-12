@@ -22,15 +22,26 @@ export class CategoryService {
     return this.categoryRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} category`;
+  // }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(updateCategoryDto: UpdateCategoryDto) {
+    const category = await this.categoryRepository
+      .createQueryBuilder()
+      .where({ id: updateCategoryDto.id })
+      .update('Category')
+      .set({
+        name: updateCategoryDto.name,
+      })
+      .execute();
+    if (!category) {
+      throw Error('Category not exist');
+    }
+    return category;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} category`;
+    return this.categoryRepository.createQueryBuilder('Category').where({ id: id }).delete().execute();
   }
 }

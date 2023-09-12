@@ -23,9 +23,9 @@ export class CategoryController {
   //   return this.categoryService.findOne(+id);
   // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryService.update(+id, updateCategoryDto);
+  @Patch()
+  update(@Body() updateCategoryDto: UpdateCategoryDto) {
+    return this.categoryService.update(updateCategoryDto);
   }
 
   @Delete(':id')

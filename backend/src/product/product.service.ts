@@ -30,17 +30,26 @@ export class ProductService {
   }
 
   async update(updateProductDto: UpdateProductDto) {
-    const product = await this.productRepository.findBy({ id: updateProductDto.id });
+    const product = await this.productRepository.createQueryBuilder()
+      .update('Products')
+      .set({
+        label: updateProductDto.label,
+        image: updateProductDto.image,
+        description: updateProductDto.description,
+        nowPrice: updateProductDto.nowPrice,
+        oldPrice: updateProductDto.oldPrice,
+        category: updateProductDto.category,
+      })
+      .where({ id: updateProductDto.id })
+      .execute();
 
     // If the product with the given id doesn't exist, you can handle this case accordingly
     if (!product) {
       throw new Error(`Product with ID ${updateProductDto.id} not found`);
     }
 
-    const newProductObject = { ...product, ...updateProductDto };
 
     // Save the updated product entity to the database
-    await this.productRepository.save(newProductObject);
 
     return product;
   }
