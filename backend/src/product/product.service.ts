@@ -13,16 +13,20 @@ export class ProductService {
   ) {
   }
 
- async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto) {
     return this.productRepository.save(createProductDto);
- }
+  }
 
   async findAll() {
     return this.productRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: number) {
+    const product = await this.productRepository.findOneBy({ id: id });
+    if (!product) {
+      throw new Error(`Product with ID ${product} not found`);
+    }
+    return product;
   }
 
   async update(updateProductDto: UpdateProductDto) {
