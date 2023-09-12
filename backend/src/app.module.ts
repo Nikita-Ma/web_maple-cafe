@@ -2,10 +2,9 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './users/users.module';
 import { OrdersModule } from './orders/orders.module';
 import { ProductModule } from './product/product.module';
-import { Users } from './users/entities/users.entity';
+import { Users } from './auth/entities/users.entity';
 import { Products } from './product/entities/product.entity';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './logger.middleware';
@@ -23,7 +22,6 @@ import { LoggerMiddleware } from './logger.middleware';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    UsersModule,
     OrdersModule,
     ProductModule,
     AuthModule,

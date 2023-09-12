@@ -1,28 +1,73 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Users } from './entities/users.entity';
+import { Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
 
-type UserI =
-  | [
-      {
-        entityUsers_email: string;
-        entityUsers_id: number;
-        entityUsers_password: string;
-      },
-    ]
-  | any[];
+// type UserI =
+//   | [
+//   {
+//     entityUsers_email: string;
+//     entityUsers_id: number;
+//     entityUsers_password: string;
+//   },
+// ]
+//   | any[];
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    @InjectRepository(Users)
+    private userRepository: Repository<Users>,
+    private readonly jwtService: JwtService,
+  ) {
+  }
 
   async signIn(email: string, pass: string): Promise<any> {
-    const user: UserI = await this.usersService.findOnePerson(email);
-    if (user[0]?.entityUsers_password !== pass) {
-      throw new UnauthorizedException();
+    console.log(email);
+    const user = await this.userRepository
+      .createQueryBuilder()
+      .where({ email: email })
+      .getOne();
+    console.log(user);
+    const verifyPassword = await this.comparePasswords(pass, user.password);
+    if (!verifyPassword) {
+      return;
     }
-    // const { password, ...result } = user;
-    // TODO: Generate a JWT and return it here
-    // instead of the user object
-    return user;
+    const readyToken = this.generateToken({ payload: btoa(user.id + user.telephone) });
+
+    return readyToken;
   }
+
+  async hashPassword(password: string): Promise<string> {
+    const saltRounds = 10; // You can adjust the number of salt rounds for your application.
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    return hashedPassword;
+  }
+
+  async generateToken(payload: any): Promise<string> {
+    return this.jwtService.sign(payload);
+  }
+
+  async registerUser(user) {
+    return this.userRepository.save(user);
+  }
+
+
+  async comparePasswords(
+    plainPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return bcrypt.compare(plainPassword, hashedPassword);
+  }
+
+  async comparePhones(
+    plainPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return bcrypt.compare(plainPassword, hashedPassword);
+  }
+
 }
