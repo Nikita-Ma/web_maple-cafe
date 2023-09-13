@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, OneToMany } from 'typeorm';
+import { Order } from '../../orders/entities/order.entity';
 
 @Entity('users')
 @Unique(['telephone'])
@@ -19,10 +20,11 @@ export class Users {
   email: string;
   @Column({ default: false })
   banned: boolean;
-  @Column({ nullable: true })
-  orders: number;
+
   @Column({ default: 0 })
   restMoney: number;
+  @OneToMany(() => Order, order => order.user)
+  orders: Order[];
   @CreateDateColumn()
   date: Date;
 }
