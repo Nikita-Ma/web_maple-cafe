@@ -33,11 +33,10 @@ export class AuthService {
     console.log(user);
     const verifyPassword = await this.comparePasswords(pass, user.password);
     if (!verifyPassword) {
-      return;
+      return false;
     }
-    const readyToken = this.generateToken({ payload: btoa(user.id + user.telephone) });
-
-    return readyToken;
+    const readyToken = await this.generateToken({ payload: user.id + btoa(user.telephone) });
+    return await readyToken;
   }
 
   async hashPassword(password: string): Promise<string> {
@@ -46,8 +45,6 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, salt);
     return hashedPassword;
   }
-
-
 
   async generateToken(payload: any): Promise<string> {
     return this.jwtService.sign(payload);
@@ -66,10 +63,15 @@ export class AuthService {
   }
 
   async comparePhones(
-    plainPassword: string,
-    hashedPassword: string,
+    plainPhone: string,
+    hashedPhone: string,
   ): Promise<boolean> {
-    return bcrypt.compare(plainPassword, hashedPassword);
+    return bcrypt.compare(plainPhone, hashedPhone);
+  }
+
+
+  async findOneId(id: number) {
+    return this.userRepository.findOneBy({ id: id });
   }
 
 }

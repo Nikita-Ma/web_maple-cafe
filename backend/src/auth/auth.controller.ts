@@ -20,13 +20,10 @@ export class AuthController {
     const hashedPassword = await this.authService.hashPassword(
       createUserDto.password,
     );
-    const hashedPhone = await this.authService.hashPassword(
-      createUserDto.telephone,
-    );
+
     const updatedData = {
       ...createUserDto,
       password: hashedPassword,
-      telephone: hashedPhone,
     };
     return this.authService.registerUser(updatedData);
   }
@@ -34,7 +31,6 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   logIn(@Body() signInDto: Record<string, string>) {
-    console.log(signInDto);
     return this.authService.logIn(signInDto.email, signInDto.password);
   }
 

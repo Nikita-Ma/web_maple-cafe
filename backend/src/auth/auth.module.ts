@@ -11,6 +11,7 @@ import { jwtConstants } from './constants';
 import { Users } from './entities/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthMiddleware } from './auth.middleware';
+import { AuthGuard } from './auth.guard';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { AuthMiddleware } from './auth.middleware';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, AuthGuard],
+  exports: [AuthService, AuthGuard],
 })
 export class AuthModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
