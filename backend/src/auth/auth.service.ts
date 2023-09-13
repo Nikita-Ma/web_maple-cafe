@@ -62,14 +62,6 @@ export class AuthService {
     return bcrypt.compare(plainPassword, hashedPassword);
   }
 
-  async comparePhones(
-    plainPhone: string,
-    hashedPhone: string,
-  ): Promise<boolean> {
-    return bcrypt.compare(plainPhone, hashedPhone);
-  }
-
-
   async findOneId(id: number) {
     return this.userRepository.findOneBy({ id: id });
   }

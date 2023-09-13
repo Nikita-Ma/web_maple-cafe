@@ -1,5 +1,4 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 import { AuthService } from './auth.service';
@@ -18,6 +17,10 @@ export class AuthGuard implements CanActivate {
   ): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
+
+    if (!request.headers['authorization']) {
+      return false;
+    }
     // Get the token from the request (e.g., from headers, cookies, or query parameters)
     const token = request.headers['authorization'].split(' ')[1];
     if (!token) {
