@@ -1,4 +1,13 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  ConflictException,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UnauthorizedException,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -7,7 +16,8 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  async register(@Body() createUserDto: CreateUserDto) {
+  async register(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     const hashedPassword = await this.authService.hashPassword(
       createUserDto.password,
     );
@@ -16,13 +26,25 @@ export class AuthController {
       ...createUserDto,
       password: hashedPassword,
     };
-    return this.authService.registerUser(updatedData);
+    const registeredStatus = await this.authService.registerUser(updatedData);
+    if (!registeredStatus) {
+      throw new ConflictException(`You already use any data in system!`);
+    }
+    return registeredStatus;
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  logIn(@Body() signInDto: Record<string, string>) {
-    return this.authService.logIn(signInDto.email, signInDto.password);
+  async logIn(@Body() signInDto: Record<string, string>) {
+    const logInStatus = await this.authService.logIn(
+      signInDto.email,
+      signInDto.password,
+    );
+    if (!logInStatus) {
+      throw new UnauthorizedException(
+        "Please don't try find vulnerability. We'll must banned u",
+      );
+    }
   }
 
   // @Get('profile')

@@ -5,16 +5,6 @@ import { Users } from './entities/users.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 
-// type UserI =
-//   | [
-//   {
-//     entityUsers_email: string;
-//     entityUsers_id: number;
-//     entityUsers_password: string;
-//   },
-// ]
-//   | any[];
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -24,20 +14,30 @@ export class AuthService {
   ) {}
 
   async logIn(email: string, pass: string): Promise<any> {
-    console.log(email);
-    const user = await this.userRepository
-      .createQueryBuilder()
-      .where({ email: email })
-      .getOne();
-    console.log(user);
-    const verifyPassword = await this.comparePasswords(pass, user.password);
-    if (!verifyPassword) {
+    // TODO: Refactor User and userData (need one namespace)
+    try {
+      const user = await this.userRepository
+        .createQueryBuilder()
+        .where({ email: email })
+        .getOne();
+      const verifyPassword = await this.comparePasswords(pass, user.password);
+      if (!verifyPassword) {
+        return false;
+      }
+      const readyToken = await this.generateToken({
+        payload: user.id + btoa(user.telephone),
+      });
+      return {
+        user: {
+          firstName: user.firstName,
+          lastname: user.lastName,
+          status: user.status,
+          token: readyToken,
+        },
+      };
+    } catch (e) {
       return false;
     }
-    const readyToken = await this.generateToken({
-      payload: user.id + btoa(user.telephone),
-    });
-    return readyToken;
   }
 
   async hashPassword(password: string): Promise<string> {
@@ -51,7 +51,22 @@ export class AuthService {
   }
 
   async registerUser(user) {
-    return this.userRepository.save(user);
+    try {
+      const userData = await this.userRepository.save(user);
+      const readyToken = await this.generateToken({
+        payload: userData.id + btoa(userData.telephone),
+      });
+      return {
+        user: {
+          firstName: userData.firstName,
+          lastname: userData.lastName,
+          status: userData.status,
+          token: readyToken,
+        },
+      };
+    } catch (e) {
+      return false;
+    }
   }
 
   async comparePasswords(
