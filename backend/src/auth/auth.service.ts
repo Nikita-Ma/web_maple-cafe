@@ -21,8 +21,7 @@ export class AuthService {
     @InjectRepository(Users)
     private userRepository: Repository<Users>,
     private readonly jwtService: JwtService,
-  ) {
-  }
+  ) {}
 
   async logIn(email: string, pass: string): Promise<any> {
     console.log(email);
@@ -35,15 +34,16 @@ export class AuthService {
     if (!verifyPassword) {
       return false;
     }
-    const readyToken = await this.generateToken({ payload: user.id + btoa(user.telephone) });
-    return await readyToken;
+    const readyToken = await this.generateToken({
+      payload: user.id + btoa(user.telephone),
+    });
+    return readyToken;
   }
 
   async hashPassword(password: string): Promise<string> {
     const saltRounds = 10; // You can adjust the number of salt rounds for your application.
     const salt = await bcrypt.genSalt(saltRounds);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    return hashedPassword;
+    return await bcrypt.hash(password, salt);
   }
 
   async generateToken(payload: any): Promise<string> {
@@ -53,7 +53,6 @@ export class AuthService {
   async registerUser(user) {
     return this.userRepository.save(user);
   }
-
 
   async comparePasswords(
     plainPassword: string,
@@ -65,5 +64,4 @@ export class AuthService {
   async findOneId(id: number) {
     return this.userRepository.findOneBy({ id: id });
   }
-
 }

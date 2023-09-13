@@ -9,14 +9,10 @@ export class AuthGuard implements CanActivate {
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
     private authService: AuthService,
-  ) {
-  }
+  ) {}
 
-  async canActivate(
-    context: ExecutionContext,
-  ): Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-
 
     if (!request.headers['authorization']) {
       return false;
@@ -26,7 +22,6 @@ export class AuthGuard implements CanActivate {
     if (!token) {
       return false; // No token found, deny access
     }
-
 
     try {
       // Decode and verify the token using the JwtService

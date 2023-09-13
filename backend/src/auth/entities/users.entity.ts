@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  Unique,
+  CreateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { Order } from '../../orders/entities/order.entity';
 
 @Entity('users')
@@ -23,7 +30,7 @@ export class Users {
 
   @Column({ default: 0 })
   restMoney: number;
-  @OneToMany(() => Order, order => order.user)
+  @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
   @CreateDateColumn()
   date: Date;

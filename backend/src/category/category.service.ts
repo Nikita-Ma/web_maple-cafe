@@ -7,12 +7,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class CategoryService {
-
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
-  ) {
-  }
+  ) {}
 
   create(createCategoryDto: CreateCategoryDto) {
     return this.categoryRepository.save(createCategoryDto);
@@ -42,6 +40,10 @@ export class CategoryService {
   }
 
   remove(id: number) {
-    return this.categoryRepository.createQueryBuilder('Category').where({ id: id }).delete().execute();
+    return this.categoryRepository
+      .createQueryBuilder('Category')
+      .where({ id: id })
+      .delete()
+      .execute();
   }
 }
