@@ -33,6 +33,7 @@ export class AuthController {
     return registeredStatus;
   }
 
+  // TODO: Put Validation pipe into body
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async logIn(@Body() signInDto: Record<string, string>) {
@@ -45,6 +46,22 @@ export class AuthController {
         "Please don't try find vulnerability. We'll must banned u",
       );
     }
+    return logInStatus;
+  }
+
+  // TODO: Put Validation pipe into body
+  @Post('verify')
+  async verifyToken(@Body() signInDto: any) {
+    console.log(signInDto);
+    const logInStatus = await this.authService.verifyToken(
+      signInDto.user.token,
+    );
+    if (!logInStatus) {
+      throw new UnauthorizedException(
+        "Please don't try find vulnerability. We'll must banned u",
+      );
+    }
+    return logInStatus;
   }
 
   // @Get('profile')

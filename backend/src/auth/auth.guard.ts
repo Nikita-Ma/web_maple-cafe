@@ -25,11 +25,13 @@ export class AuthGuard implements CanActivate {
 
     try {
       // Decode and verify the token using the JwtService
-      const decodedToken = this.jwtService.verify(token);
-      const userPhone = atob(decodedToken.payload.slice(1));
-      const user = await this.authService.findOneId(decodedToken[0]);
 
-      if (user.telephone === userPhone && user.status !== 'user') {
+      const decodedToken = this.jwtService.verify(token);
+      // const giveID = decodedToken.payload.
+      const user = await this.authService.findOneId(
+        decodedToken.payload.match(/^\d+/)[0],
+      );
+      if (user.status !== 'user') {
         return true;
       }
       return false; // Access is granted

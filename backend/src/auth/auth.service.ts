@@ -15,6 +15,7 @@ export class AuthService {
 
   async logIn(email: string, pass: string): Promise<any> {
     // TODO: Refactor User and userData (need one namespace)
+    console.log(email, pass);
     try {
       const user = await this.userRepository
         .createQueryBuilder()
@@ -35,6 +36,18 @@ export class AuthService {
           token: readyToken,
         },
       };
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async verifyToken(token: string): Promise<any> {
+    // console.log(token);
+    try {
+      const decodedToken = this.jwtService.verify(token);
+      if (decodedToken) {
+        return true;
+      }
     } catch (e) {
       return false;
     }
