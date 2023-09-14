@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getCookie } from "../../../../utils/getCookie";
 
 export default function Page() {
   const [user, setUser] = useState({
@@ -51,6 +52,32 @@ export default function Page() {
       console.error("Error Caught", e);
     }
   };
+
+  useEffect(() => {
+    const verifyUserToken = async () => {
+      const fetchToken = await fetch("http://localhost:3030/api/auth/verify", {
+        method: "POST",
+        body: checkUserCookie,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!fetchToken.ok) {
+        document.cookie =
+          "user_data=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      }
+      if (fetchToken.ok) {
+        router.push("/shop");
+      }
+    };
+
+    const checkUserCookie = getCookie("user_data");
+    if (checkUserCookie !== null) {
+      const userData = JSON.parse(checkUserCookie);
+      verifyUserToken();
+    }
+  }, []);
+
   return (
     <>
       <div className="max-w-md mx-auto mt-4 p-6 bg-white rounded-lg shadow-md">
