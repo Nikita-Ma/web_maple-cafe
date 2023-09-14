@@ -22,7 +22,7 @@ export default function Page() {
       });
       if (!fetchToken.ok) {
         document.cookie =
-          "user_data=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/auth;";
+          "user_data=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/*;";
       }
       if (fetchToken.ok) {
         router.push("/shop");

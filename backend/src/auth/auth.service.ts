@@ -31,7 +31,7 @@ export class AuthService {
       return {
         user: {
           firstName: user.firstName,
-          lastname: user.lastName,
+          lastName: user.lastName,
           status: user.status,
           token: readyToken,
         },
@@ -72,7 +72,7 @@ export class AuthService {
       return {
         user: {
           firstName: userData.firstName,
-          lastname: userData.lastName,
+          lastName: userData.lastName,
           status: userData.status,
           token: readyToken,
         },

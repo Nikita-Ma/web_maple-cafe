@@ -38,7 +38,9 @@ export default function Page() {
       if (reqData.ok) {
         alert("Все хорошо");
         const preparedData = await reqData.json();
-        document.cookie = `user_data=${JSON.stringify(preparedData)}`;
+        document.cookie = `user_data=${JSON.stringify(
+          preparedData,
+        )};  path=/; `;
         router.push("/shop");
       }
     } else {
